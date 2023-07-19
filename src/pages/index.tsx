@@ -28,6 +28,8 @@ export default function Home() {
                       <span className="h-8 w-1 rounded-lg bg-gray-200"></span>
                       <a href="#" className="relative block">
                         <Image
+                          width={40}
+                          height={40}
                           alt="profil"
                           src={sessionData.user.image ?? ""}
                           className="mx-auto h-10 w-10 rounded-full object-cover "

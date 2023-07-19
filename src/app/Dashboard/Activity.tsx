@@ -18,63 +18,41 @@ export const Activity = () => {
           </span>
         </div>
       </div>
-      {/* Table */}
       <div className="mt-6 flex flex-col">
-        <div className="overflow-x-auto rounded-lg">
-          <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden shadow sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
-                <thead className="bg-gray-50 dark:bg-gray-700">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="p-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white"
-                    >
-                      Date
-                    </th>
-                    <th
-                      scope="col"
-                      className="p-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white"
-                    >
-                      Log
-                    </th>
-                    <th
-                      scope="col"
-                      className="p-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white"
-                    >
-                      Duration
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800">
-                  {data?.map((log) => {
-                    const duration = dayjs.duration(
-                      dayjs(log.endAt).diff(log.startAt)
-                    );
-                    return (
-                      <tr key={log.id}>
-                        <td className="whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                          {dayjs(log.startAt).format(" DD MMMM YYYY")}
-                        </td>
-                        <td className="whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                          {dayjs(log.startAt).format(" DD MMMM YYYY HH:mm")} -{" "}
-                          {log.endAt
-                            ? dayjs(log.endAt).format(" DD MMMM YYYY HH:mm")
-                            : "Unfinished"}
-                        </td>
-                        <td className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
-                          {log.endAt &&
-                            `${duration.hours()} hours ${duration.minutes()} minutes`}
-                          {!log.endAt && "NOT DONE"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+        <div className="flex bg-gray-50 py-2">
+          <div className="flex-1 text-center text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white">
+            Date
+          </div>
+          <div className="flex-1 text-center text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white">
+            Duration
           </div>
         </div>
+        <div>
+          {data?.map((log) => {
+            const duration = dayjs.duration(dayjs(log.endAt).diff(log.startAt));
+            return (
+              <div key={log.id} className="flex">
+                <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
+                  <div>{dayjs(log.startAt).format(" DD MMMM YYYY")}</div>
+                  <div>
+                    {dayjs(log.startAt).format("HH:mm")} -{" "}
+                    {log.endAt
+                      ? dayjs(log.endAt).format("HH:mm")
+                      : "Unfinished"}
+                  </div>
+                </div>
+                <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
+                  {log.endAt &&
+                    `${duration.hours()} hours ${duration.minutes()} minutes`}
+                  {!log.endAt && "NOT DONE"}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+          <tbody className="bg-white dark:bg-gray-800"></tbody>
+        </table>
       </div>
     </div>
   );

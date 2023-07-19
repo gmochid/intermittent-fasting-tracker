@@ -25,7 +25,7 @@ export const fastingLogRouter = createTRPCRouter({
     });
     return fastingLogs;
   }),
-  addFastingLog: protectedProcedure
+  startFasting: protectedProcedure
     .input(
       z.object({
         startAt: z.date(),
@@ -40,7 +40,7 @@ export const fastingLogRouter = createTRPCRouter({
       });
       return fastingLog;
     }),
-  updateFastingLog: protectedProcedure
+  finishFasting: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -56,6 +56,16 @@ export const fastingLogRouter = createTRPCRouter({
           id,
         },
       });
+      return fastingLog;
+    }),
+  cancelFasting: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input: { id }, ctx }) => {
+      const fastingLog = await prisma.fastingLog.delete({ where: { id } });
       return fastingLog;
     }),
 });

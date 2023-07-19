@@ -1,11 +1,10 @@
+import { Spinner } from "flowbite-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { Dashboard } from "~/app/Dashboard";
-import { api } from "~/utils/api";
 
 export default function Home() {
-  const { data: sessionData } = useSession();
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data: sessionData, status } = useSession();
 
   return (
     <>
@@ -41,7 +40,7 @@ export default function Home() {
 
                   {/* Sign In / Sign Out Button */}
                   <button
-                    className="rounded-full bg-white/10 px-5 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+                    className="rounded-full bg-white/10 px-5 py-3 font-semibold text-gray-400 no-underline transition hover:bg-white/20 dark:text-white"
                     onClick={
                       sessionData ? () => void signOut() : () => void signIn()
                     }
@@ -53,8 +52,11 @@ export default function Home() {
             </header>
 
             <div className="h-screen overflow-auto px-4 pb-24 md:px-6">
-              {sessionData && <Dashboard />}
-              {!sessionData && (
+              {status == "loading" && (
+                <Spinner aria-label="Extra large spinner example" size="xl" />
+              )}
+              {status == "authenticated" && <Dashboard />}
+              {status == "unauthenticated" && (
                 <>
                   <h1 className="text-4xl font-semibold text-gray-800 dark:text-white">
                     Intermittent Fasting Tracker

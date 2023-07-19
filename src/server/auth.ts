@@ -6,6 +6,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
@@ -37,19 +38,47 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    jwt: ({ token, user }) => {
+      if (user) {
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
+    },
+    session: ({ session, token, user }) => {
+      if (token) {
+        session.user.email = token.email;
+        session.user.name = token.name;
+      }
+      return session;
+    },
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  secret: env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      name: "credentials",
+      type: "credentials",
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "username" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize(credentials, req) {
+        return {
+          id: "1",
+          name: "Test",
+          email: "test@test.com",
+        };
+      },
     }),
   ],
 };

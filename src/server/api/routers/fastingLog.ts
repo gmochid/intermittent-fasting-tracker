@@ -8,6 +8,9 @@ export const fastingLogRouter = createTRPCRouter({
       where: {
         userId: ctx.session.user.id,
       },
+      orderBy: {
+        startAt: "desc",
+      },
     });
     return fastingLogs;
   }),

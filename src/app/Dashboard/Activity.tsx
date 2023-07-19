@@ -1,4 +1,7 @@
 import { api } from "~/utils/api";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+dayjs.extend(duration);
 
 export const Activity = () => {
   const { data, error } = api.fastingLog.getAll.useQuery();
@@ -33,22 +36,40 @@ export const Activity = () => {
                       scope="col"
                       className="p-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white"
                     >
+                      Log
+                    </th>
+                    <th
+                      scope="col"
+                      className="p-4 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white"
+                    >
                       Duration
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-gray-800">
-                  {data?.map((log) => (
-                    <tr key={log.id}>
-                      <td className="whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                        {log.startAt.toISOString()}
-                      </td>
-                      <td className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
-                        {log.endAt && "DONE"}
-                        {!log.endAt && "NOT DONE"}
-                      </td>
-                    </tr>
-                  ))}
+                  {data?.map((log) => {
+                    const duration = dayjs.duration(
+                      dayjs(log.endAt).diff(log.startAt)
+                    );
+                    return (
+                      <tr key={log.id}>
+                        <td className="whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
+                          {dayjs(log.startAt).format(" DD MMMM YYYY")}
+                        </td>
+                        <td className="whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
+                          {dayjs(log.startAt).format(" DD MMMM YYYY HH:mm")} -{" "}
+                          {log.endAt
+                            ? dayjs(log.endAt).format(" DD MMMM YYYY HH:mm")
+                            : "Unfinished"}
+                        </td>
+                        <td className="whitespace-nowrap p-4 text-sm font-normal text-gray-500 dark:text-gray-400">
+                          {log.endAt &&
+                            `${duration.hours()} hours ${duration.minutes()} minutes`}
+                          {!log.endAt && "NOT DONE"}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

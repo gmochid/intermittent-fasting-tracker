@@ -7,11 +7,11 @@ export const Dashboard = () => {
 
   return (
     <>
-      <h1 className="text-4xl font-semibold text-gray-800 dark:text-white">
-        Good afternoon, {sessionData?.user.name}
+      <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+        Intermittent Fasting Tracker
       </h1>
-      <h2 className="text-md pb-4 text-gray-400">
-        Here is your fasting progress
+      <h2 className="pb-4 text-xl text-gray-600">
+        Good luck on your fasting journey {sessionData?.user.name}!
       </h2>
 
       <InputFasting />

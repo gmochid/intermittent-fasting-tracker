@@ -1,7 +1,6 @@
 import { Spinner } from "flowbite-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import Image from "next/image";
 import { Dashboard } from "~/app/Dashboard";
 
 export default function Home() {
@@ -27,9 +26,7 @@ export default function Home() {
                     <>
                       <span className="h-8 w-1 rounded-lg bg-gray-200"></span>
                       <a href="#" className="relative block">
-                        <Image
-                          width={40}
-                          height={40}
+                        <img
                           alt="profil"
                           src={sessionData.user.image ?? ""}
                           className="mx-auto h-10 w-10 rounded-full object-cover "

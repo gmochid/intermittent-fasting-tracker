@@ -4,9 +4,9 @@ import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
+  DefaultUser,
 } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import CredentialsProvider from "next-auth/providers/credentials";
+import GithubProvider, { GithubProfile } from "next-auth/providers/github";
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
 
@@ -24,11 +24,6 @@ declare module "next-auth" {
       // role: UserRole;
     };
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
 }
 
 /**
@@ -42,13 +37,17 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.email = user.email;
         token.name = user.name;
+        token.picture = user.image;
+        token.sub = user.id;
       }
       return token;
     },
-    session: ({ session, token, user }) => {
+    session: ({ session, token }) => {
       if (token) {
         session.user.email = token.email;
         session.user.name = token.name;
+        session.user.image = token.picture;
+        session.user.id = token.sub!;
       }
       return session;
     },
@@ -61,24 +60,9 @@ export const authOptions: NextAuthOptions = {
   secret: env.NEXTAUTH_SECRET,
   adapter: PrismaAdapter(prisma),
   providers: [
-    GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-    }),
-    CredentialsProvider({
-      name: "credentials",
-      type: "credentials",
-      credentials: {
-        username: { label: "Username", type: "text", placeholder: "username" },
-        password: { label: "Password", type: "password" },
-      },
-      authorize(credentials, req) {
-        return {
-          id: "1",
-          name: "Test",
-          email: "test@test.com",
-        };
-      },
+    GithubProvider({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
     }),
   ],
 };

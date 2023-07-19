@@ -1,4 +1,4 @@
-import { Button, Modal, Toast } from "flowbite-react";
+import { Button, Modal } from "flowbite-react";
 import { useState } from "react";
 import { api } from "~/utils/api";
 
@@ -7,9 +7,9 @@ export const InputFasting = () => {
   const [modalFinishFasting, setModalFinishFasting] = useState(false);
   const [modalCancelFasting, setModalCancelFasting] = useState(false);
   const apiContext = api.useContext();
-  const invalidate = () => {
-    apiContext.fastingLog.getLatest.invalidate();
-    apiContext.fastingLog.getAll.invalidate();
+  const invalidate = async () => {
+    await apiContext.fastingLog.getLatest.invalidate();
+    await apiContext.fastingLog.getAll.invalidate();
   };
   const { mutate: startFasting } = api.fastingLog.startFasting.useMutation({
     onSuccess: invalidate,

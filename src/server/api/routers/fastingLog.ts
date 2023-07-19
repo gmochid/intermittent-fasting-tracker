@@ -47,7 +47,7 @@ export const fastingLogRouter = createTRPCRouter({
         endAt: z.date(),
       })
     )
-    .mutation(async ({ input: { id, endAt }, ctx }) => {
+    .mutation(async ({ input: { id, endAt } }) => {
       const fastingLog = await prisma.fastingLog.update({
         data: {
           endAt,
@@ -64,7 +64,7 @@ export const fastingLogRouter = createTRPCRouter({
         id: z.string(),
       })
     )
-    .mutation(async ({ input: { id }, ctx }) => {
+    .mutation(async ({ input: { id } }) => {
       const fastingLog = await prisma.fastingLog.delete({ where: { id } });
       return fastingLog;
     }),

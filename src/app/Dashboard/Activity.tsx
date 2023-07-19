@@ -4,7 +4,7 @@ import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
 export const Activity = () => {
-  const { data, error } = api.fastingLog.getAll.useQuery();
+  const { data } = api.fastingLog.getAll.useQuery();
   return (
     <div className="mt-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
       {/* Card header */}

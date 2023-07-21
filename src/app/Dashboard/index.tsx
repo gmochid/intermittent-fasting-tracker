@@ -1,9 +1,13 @@
 import { useSession } from "next-auth/react";
 import { Activity } from "./Activity";
 import { InputFasting } from "./InputFasting";
+import { Statistic } from "./Statistics";
+import { api } from "~/utils/api";
 
 export const Dashboard = () => {
   const { data: sessionData } = useSession();
+  const { data: latestFastingLog, isSuccess } =
+    api.fastingLog.getLatest.useQuery();
 
   return (
     <>
@@ -15,8 +19,7 @@ export const Dashboard = () => {
       </h2>
 
       <InputFasting />
-
-      {/* <Statistic /> */}
+      {isSuccess && latestFastingLog && <Statistic log={latestFastingLog} />}
       <Activity />
     </>
   );

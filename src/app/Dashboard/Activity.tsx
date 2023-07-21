@@ -1,13 +1,46 @@
 import { api } from "~/utils/api";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import { type FastingLog } from "@prisma/client";
 dayjs.extend(duration);
+
+interface ActivityDurationProps extends React.HTMLProps<HTMLDivElement> {
+  log: FastingLog;
+}
+
+const ActivityDuration = ({ log }: ActivityDurationProps) => {
+  if (!log.endAt) {
+    return (
+      <>
+        <div>{dayjs(log.startAt).format("DD MMMM YYYY")}</div>
+        <div>{`${dayjs(log.startAt).format("HH:mm")} - UNFINISHED`}</div>
+      </>
+    );
+  }
+  if (dayjs(log.endAt).isAfter(dayjs(log.startAt), "days")) {
+    return (
+      <>
+        <div>{`${dayjs(log.startAt).format("DD MMMM YYYY HH:mm")} - `}</div>
+        <div>{dayjs(log.endAt).format("DD MMMM YYYY HH:mm")}</div>
+      </>
+    );
+  }
+  return (
+    <>
+      <div>{dayjs(log.startAt).format("DD MMMM YYYY")}</div>
+      <div>
+        {`${dayjs(log.startAt).format("HH:mm")} - ${dayjs(log.endAt).format(
+          "HH:mm"
+        )}`}
+      </div>
+    </>
+  );
+};
 
 export const Activity = () => {
   const { data } = api.fastingLog.getAll.useQuery();
   return (
     <div className="mt-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
-      {/* Card header */}
       <div className="items-center justify-between lg:flex">
         <div className="mb-4 lg:mb-0">
           <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
@@ -33,17 +66,13 @@ export const Activity = () => {
             return (
               <div key={log.id} className="flex">
                 <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                  <div>{dayjs(log.startAt).format(" DD MMMM YYYY")}</div>
-                  <div>
-                    {dayjs(log.startAt).format("HH:mm")} -{" "}
-                    {log.endAt
-                      ? dayjs(log.endAt).format("HH:mm")
-                      : "Unfinished"}
-                  </div>
+                  <ActivityDuration log={log} />
                 </div>
                 <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
                   {log.endAt &&
-                    `${duration.hours()} hours ${duration.minutes()} minutes`}
+                    `${Math.round(
+                      duration.asHours()
+                    )} hours ${duration.minutes()} minutes`}
                   {!log.endAt && "NOT DONE"}
                 </div>
               </div>

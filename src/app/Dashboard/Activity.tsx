@@ -3,17 +3,24 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { type FastingLog } from "@prisma/client";
 import { Button } from "flowbite-react";
+import Link from "next/link";
 dayjs.extend(duration);
 
 interface ActivityDurationProps extends React.HTMLProps<HTMLDivElement> {
   log: FastingLog;
+  alwaysShowDate?: boolean;
 }
 
-const ActivityDuration = ({ log }: ActivityDurationProps) => {
+export const ActivityDuration = ({
+  log,
+  alwaysShowDate = false,
+}: ActivityDurationProps) => {
   if (!log.endAt) {
     return (
       <>
-        <div>{dayjs(log.startAt).format("DD MMMM YYYY")}</div>
+        {alwaysShowDate && (
+          <div>{dayjs(log.startAt).format("DD MMMM YYYY")}</div>
+        )}
         <div>{`${dayjs(log.startAt).format("HH:mm")} - UNFINISHED`}</div>
       </>
     );
@@ -28,7 +35,7 @@ const ActivityDuration = ({ log }: ActivityDurationProps) => {
   }
   return (
     <>
-      <div>{dayjs(log.startAt).format("DD MMMM YYYY")}</div>
+      {alwaysShowDate && <div>{dayjs(log.startAt).format("DD MMMM YYYY")}</div>}
       <div>
         {`${dayjs(log.startAt).format("HH:mm")} - ${dayjs(log.endAt).format(
           "HH:mm"
@@ -51,7 +58,9 @@ export const Activity = () => {
             Be proud of your achievement
           </span>
         </div>
-        <Button color="gray">See All Activities</Button>
+        <Link href="/activities">
+          <Button color="gray">See All Activities</Button>
+        </Link>
       </div>
       <div className="mt-6 flex flex-col">
         <div className="flex bg-gray-50 py-2">
@@ -71,7 +80,8 @@ export const Activity = () => {
               return (
                 <div key={index} className="flex">
                   <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                    {dayjs(date).format("dddd, DD MMMM YYYY")}
+                    <div>{dayjs(date).format("dddd")}</div>
+                    <div>{dayjs(date).format("DD MMMM YYYY")}</div>
                   </div>
                   <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
                     -
@@ -86,16 +96,21 @@ export const Activity = () => {
             return (
               <div key={index} className="flex">
                 <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                  {dayjs(date).format("dddd, DD MMMM YYYY")}
+                  <div>{dayjs(date).format("dddd")}</div>
+                  <div>{dayjs(date).format("DD MMMM YYYY")}</div>
                 </div>
                 <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
                   <ActivityDuration log={log} />
                 </div>
                 <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                  {log.endAt &&
-                    `${Math.round(
-                      duration.asHours()
-                    )} hours ${duration.minutes()} minutes`}
+                  {log.endAt && (
+                    <div className="flex flex-col md:flex-row">
+                      <div className="mr-1">
+                        {Math.round(duration.asHours())} hours{" "}
+                      </div>
+                      <div>{duration.minutes()} minutes</div>
+                    </div>
+                  )}
                   {!log.endAt && "NOT DONE"}
                 </div>
               </div>

@@ -8,7 +8,7 @@ interface ProfileInput {
   targetHours: string | undefined;
 }
 
-export default function Home() {
+export default function Profile() {
   useSession({ required: true });
   const { data, isSuccess, isLoading } = api.profile.getProfile.useQuery();
   const { mutate } = api.profile.setProfile.useMutation();

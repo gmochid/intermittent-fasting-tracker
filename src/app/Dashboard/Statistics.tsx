@@ -104,14 +104,16 @@ export const Statistic = ({ log, profile }: StatisticProps) => {
                   Your fasting today
                 </p>
               </div>
-              <div className="mt-6 border-b border-gray-200 text-xl font-bold text-black dark:text-white md:mt-0">
-                {`${Math.round(
-                  duration.asHours()
-                )} hours ${duration.minutes()} minutes`}
-                <span className="text-xs text-gray-400">
+              <div className="flex flex-col items-end border-b border-gray-200 text-xl font-bold text-black dark:text-white md:flex-row">
+                <div>
+                  {`${Math.round(
+                    duration.asHours()
+                  )} hours ${duration.minutes()} minutes`}
+                </div>
+                <div className="text-xs text-gray-400">
                   {" "}
                   / {profile.targetHours} hours
-                </span>
+                </div>
               </div>
             </div>
             <FastingText durationHour={duration.get("hours")} />

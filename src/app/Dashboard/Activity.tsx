@@ -38,7 +38,7 @@ const ActivityDuration = ({ log }: ActivityDurationProps) => {
 };
 
 export const Activity = () => {
-  const { data } = api.fastingLog.getAll.useQuery();
+  const { data } = api.fastingLog.getOneWeek.useQuery();
   return (
     <div className="mt-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
       <div className="items-center justify-between lg:flex">
@@ -57,14 +57,35 @@ export const Activity = () => {
             Date
           </div>
           <div className="flex-1 text-center text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white">
+            Detail
+          </div>
+          <div className="flex-1 text-center text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white">
             Duration
           </div>
         </div>
         <div>
-          {data?.map((log) => {
+          {data?.map(({ date, log }, index) => {
+            if (log === undefined) {
+              return (
+                <div key={index} className="flex">
+                  <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
+                    {date}
+                  </div>
+                  <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
+                    -
+                  </div>
+                  <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
+                    -
+                  </div>
+                </div>
+              );
+            }
             const duration = dayjs.duration(dayjs(log.endAt).diff(log.startAt));
             return (
-              <div key={log.id} className="flex">
+              <div key={index} className="flex">
+                <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
+                  {date}
+                </div>
                 <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
                   <ActivityDuration log={log} />
                 </div>

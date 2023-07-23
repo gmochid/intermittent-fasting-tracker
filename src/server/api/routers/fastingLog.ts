@@ -54,7 +54,6 @@ export const fastingLogRouter = createTRPCRouter({
         });
       }
     }
-    console.log(days);
     return days;
   }),
   getLatest: protectedProcedure.query(async ({ ctx }) => {

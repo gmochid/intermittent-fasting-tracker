@@ -1,5 +1,6 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { type PropsWithChildren } from "react";
 
@@ -19,7 +20,11 @@ export default function MainLayout({ children }: PropsWithChildren) {
         <div className="flex items-start justify-between">
           <div className="flex w-full flex-col md:space-y-4">
             <header className="z-40 flex h-16 w-full items-center justify-between">
-              <div className="ml-6 block lg:hidden"></div>
+              <div className="ml-6 block">
+                <Link href="/" className="text-xl">
+                  Tracker
+                </Link>
+              </div>
               <div className="relative z-20 flex h-full flex-col justify-end px-3 md:w-full">
                 {/* Profile */}
                 <div className="relative flex w-full items-center justify-end space-x-4 p-1">
@@ -33,15 +38,11 @@ export default function MainLayout({ children }: PropsWithChildren) {
                           className="mx-auto h-10 w-10 rounded-full object-cover "
                         />
                       </a>
-                      <button
-                        className="text-md flex items-center text-gray-500 dark:text-white"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          void push("/profile");
-                        }}
-                      >
-                        {sessionData.user.name?.replace(/ .*/, "")}
-                      </button>
+                      <Link href="/profile">
+                        <button className="text-md flex items-center text-gray-500 dark:text-white">
+                          {sessionData.user.name?.replace(/ .*/, "")}
+                        </button>
+                      </Link>
                     </>
                   )}
 

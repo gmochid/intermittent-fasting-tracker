@@ -2,6 +2,7 @@ import { api } from "~/utils/api";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { type FastingLog } from "@prisma/client";
+import { Button } from "flowbite-react";
 dayjs.extend(duration);
 
 interface ActivityDurationProps extends React.HTMLProps<HTMLDivElement> {
@@ -50,6 +51,7 @@ export const Activity = () => {
             Be proud of your achievement
           </span>
         </div>
+        <Button color="gray">See All Activities</Button>
       </div>
       <div className="mt-6 flex flex-col">
         <div className="flex bg-gray-50 py-2">
@@ -69,7 +71,7 @@ export const Activity = () => {
               return (
                 <div key={index} className="flex">
                   <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                    {date}
+                    {dayjs(date).format("dddd, DD MMMM YYYY")}
                   </div>
                   <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
                     -
@@ -84,7 +86,7 @@ export const Activity = () => {
             return (
               <div key={index} className="flex">
                 <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
-                  {date}
+                  {dayjs(date).format("dddd, DD MMMM YYYY")}
                 </div>
                 <div className="flex-1 whitespace-nowrap p-4 text-sm font-normal text-gray-900 dark:text-white">
                   <ActivityDuration log={log} />

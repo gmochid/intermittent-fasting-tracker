@@ -11,6 +11,9 @@ const config = {
     "plugin:@typescript-eslint/stylistic-type-checked",
   ],
   rules: {
+    "@typescript-eslint/no-misused-promises": [
+      "off"
+    ],
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {

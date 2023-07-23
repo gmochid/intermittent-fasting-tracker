@@ -15,7 +15,7 @@ export const fastingLogRouter = createTRPCRouter({
     return fastingLogs;
   }),
   getLatest: protectedProcedure.query(async ({ ctx }) => {
-    const fastingLogs = await prisma.fastingLog.findFirstOrThrow({
+    const fastingLogs = await prisma.fastingLog.findFirst({
       where: {
         userId: ctx.session.user.id,
       },

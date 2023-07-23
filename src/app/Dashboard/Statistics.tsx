@@ -1,11 +1,12 @@
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-import { type FastingLog } from "@prisma/client";
+import { type User, type FastingLog } from "@prisma/client";
 import { useEffect, useState } from "react";
 dayjs.extend(duration);
 
 interface StatisticProps extends React.HTMLProps<HTMLDivElement> {
   log: FastingLog;
+  profile: User;
 }
 
 interface FastingTextProps extends React.HTMLProps<HTMLDivElement> {
@@ -73,7 +74,7 @@ const FastingText = ({ durationHour }: FastingTextProps) => {
   );
 };
 
-export const Statistic = ({ log }: StatisticProps) => {
+export const Statistic = ({ log, profile }: StatisticProps) => {
   const [duration, setDuration] = useState(
     dayjs.duration(dayjs(dayjs()).diff(log.startAt))
   );
@@ -88,7 +89,9 @@ export const Statistic = ({ log }: StatisticProps) => {
   });
 
   const percentage =
-    (duration.asMinutes() / dayjs.duration({ hours: 18 }).asMinutes()) * 100;
+    (duration.asMinutes() /
+      dayjs.duration({ hours: profile.targetHours }).asMinutes()) *
+    100;
 
   return (
     <div className="my-6 flex w-full flex-col items-center space-y-4 md:flex-row md:space-x-4 md:space-y-0">
@@ -105,7 +108,10 @@ export const Statistic = ({ log }: StatisticProps) => {
                 {`${Math.round(
                   duration.asHours()
                 )} hours ${duration.minutes()} minutes`}
-                <span className="text-xs text-gray-400"> / 18 hours</span>
+                <span className="text-xs text-gray-400">
+                  {" "}
+                  / {profile.targetHours} hours
+                </span>
               </div>
             </div>
             <FastingText durationHour={duration.get("hours")} />

@@ -60,6 +60,7 @@ export const fastingLogRouter = createTRPCRouter({
     const fastingLogs = await prisma.fastingLog.findFirst({
       where: {
         userId: ctx.session.user.id,
+        endAt: null,
       },
       orderBy: {
         startAt: "desc",
